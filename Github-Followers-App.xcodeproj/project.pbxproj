@@ -14,6 +14,8 @@
 		01D3A7A628842852005CC88F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01D3A7A428842852005CC88F /* LaunchScreen.storyboard */; };
 		01D3A7D02884524F005CC88F /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D3A7CF2884524F005CC88F /* SearchViewController.swift */; };
 		01D3A7D228845286005CC88F /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D3A7D128845286005CC88F /* FavoriteViewController.swift */; };
+		01D3A7D428846668005CC88F /* GFButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D3A7D328846668005CC88F /* GFButton.swift */; };
+		01D3A7D628846978005CC88F /* GFTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D3A7D528846978005CC88F /* GFTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +27,8 @@
 		01D3A7A528842852005CC88F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		01D3A7CF2884524F005CC88F /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		01D3A7D128845286005CC88F /* FavoriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
+		01D3A7D328846668005CC88F /* GFButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GFButton.swift; sourceTree = "<group>"; };
+		01D3A7D528846978005CC88F /* GFTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GFTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +68,8 @@
 				01D3A7A428842852005CC88F /* LaunchScreen.storyboard */,
 				01D3A7CF2884524F005CC88F /* SearchViewController.swift */,
 				01D3A7D128845286005CC88F /* FavoriteViewController.swift */,
+				01D3A7D328846668005CC88F /* GFButton.swift */,
+				01D3A7D528846978005CC88F /* GFTextField.swift */,
 			);
 			path = "Github-Followers-App";
 			sourceTree = "<group>";
@@ -140,9 +146,11 @@
 			files = (
 				01D3A79E28842850005CC88F /* ViewController.swift in Sources */,
 				01D3A79A28842850005CC88F /* AppDelegate.swift in Sources */,
+				01D3A7D428846668005CC88F /* GFButton.swift in Sources */,
 				01D3A7D02884524F005CC88F /* SearchViewController.swift in Sources */,
 				01D3A79C28842850005CC88F /* SceneDelegate.swift in Sources */,
 				01D3A7D228845286005CC88F /* FavoriteViewController.swift in Sources */,
+				01D3A7D628846978005CC88F /* GFTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
