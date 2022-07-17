@@ -8,10 +8,59 @@
 import UIKit
 
 class SearchViewController: UIViewController {
+    
+    let imageView = UIImageView()
+    let nameTextField = GFTextField()
+    let getFollowersButton = GFButton(title: "Get Followers", backgroundColor: .systemGreen)
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .systemPink
+        //Systembackground is making background while in light mode "white", dark mode "black"
+        view.backgroundColor = .systemBackground
+        createImageView()
+        createNameTextField()
+        createGetFollowersButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = true
+    }
+    
+    func createImageView() {
+        view.addSubview(imageView)
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "gh-logo")!
+        
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 200),
+            imageView.widthAnchor.constraint(equalToConstant: 200)
+        ])
+    }
+    
+    func createNameTextField() {
+        view.addSubview(nameTextField)
+        
+        NSLayoutConstraint.activate([
+            nameTextField.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 48),
+            nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
+            nameTextField.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+    
+    func createGetFollowersButton() {
+        view.addSubview(getFollowersButton)
+        
+        NSLayoutConstraint.activate([
+            getFollowersButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
+            getFollowersButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            getFollowersButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
+            getFollowersButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
 }
