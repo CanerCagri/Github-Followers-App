@@ -25,7 +25,6 @@ class SearchViewController: UIViewController {
         createImageView()
         createNameTextField()
         createGetFollowersButton()
-//        dismissKeyboardTapGesture()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -33,14 +32,11 @@ class SearchViewController: UIViewController {
         navigationController?.isNavigationBarHidden = true
     }
     
-    func dismissKeyboardTapGesture() {
-        let tap = UIGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
-        view.addGestureRecognizer(tap)
-    }
-    
     @objc func pushFollowersVC() {
-        guard isUsernameEntered else { print("NO NAME")
-            return }
+        guard isUsernameEntered else {
+            presentAlert(title: "Empty Username", message: "Please enter Github username", buttonTitle: "Ok")
+            return
+        }
         
         let followersVC = FollowersViewController()
         followersVC.userName = nameTextField.text
