@@ -25,6 +25,9 @@
 		01D3A7EB28869422005CC88F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D3A7EA28869422005CC88F /* User.swift */; };
 		01D3A7EE28869DEA005CC88F /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D3A7ED28869DEA005CC88F /* NetworkManager.swift */; };
 		01D3A7F12886C6D8005CC88F /* ErrorMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D3A7F02886C6D8005CC88F /* ErrorMessages.swift */; };
+		01D3A7F42886D0E0005CC88F /* FollowerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D3A7F32886D0E0005CC88F /* FollowerCell.swift */; };
+		01D3A7F62886D217005CC88F /* GFFollowerImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D3A7F52886D217005CC88F /* GFFollowerImageView.swift */; };
+		01D3A7F8288726D3005CC88F /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D3A7F7288726D3005CC88F /* UIHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +50,9 @@
 		01D3A7EA28869422005CC88F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		01D3A7ED28869DEA005CC88F /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		01D3A7F02886C6D8005CC88F /* ErrorMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessages.swift; sourceTree = "<group>"; };
+		01D3A7F32886D0E0005CC88F /* FollowerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowerCell.swift; sourceTree = "<group>"; };
+		01D3A7F52886D217005CC88F /* GFFollowerImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GFFollowerImageView.swift; sourceTree = "<group>"; };
+		01D3A7F7288726D3005CC88F /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,12 +110,14 @@
 		01D3A7E22885A31C005CC88F /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				01D3A7F22886D0AC005CC88F /* Cells */,
 				01D3A7D328846668005CC88F /* GFButton.swift */,
 				01D3A7D528846978005CC88F /* GFTextField.swift */,
 				01D3A7D9288581B1005CC88F /* GFTitleLabel.swift */,
 				01D3A7DB28858448005CC88F /* GFBodyLabel.swift */,
 				01D3A7DD2885864F005CC88F /* GFAlertViewController.swift */,
 				01D3A7E52885A5EA005CC88F /* GFContainerView.swift */,
+				01D3A7F52886D217005CC88F /* GFFollowerImageView.swift */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -153,8 +161,17 @@
 			isa = PBXGroup;
 			children = (
 				01D3A7F02886C6D8005CC88F /* ErrorMessages.swift */,
+				01D3A7F7288726D3005CC88F /* UIHelper.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		01D3A7F22886D0AC005CC88F /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				01D3A7F32886D0E0005CC88F /* FollowerCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -234,12 +251,15 @@
 				01D3A7E028859718005CC88F /* UIViewController+Ext.swift in Sources */,
 				01D3A7D02884524F005CC88F /* SearchViewController.swift in Sources */,
 				01D3A7D8288571FB005CC88F /* FollowersViewController.swift in Sources */,
+				01D3A7F62886D217005CC88F /* GFFollowerImageView.swift in Sources */,
+				01D3A7F42886D0E0005CC88F /* FollowerCell.swift in Sources */,
 				01D3A7EB28869422005CC88F /* User.swift in Sources */,
 				01D3A7DC28858448005CC88F /* GFBodyLabel.swift in Sources */,
 				01D3A7E9288692B1005CC88F /* Follower.swift in Sources */,
 				01D3A79C28842850005CC88F /* SceneDelegate.swift in Sources */,
 				01D3A7DA288581B1005CC88F /* GFTitleLabel.swift in Sources */,
 				01D3A7D228845286005CC88F /* FavoriteViewController.swift in Sources */,
+				01D3A7F8288726D3005CC88F /* UIHelper.swift in Sources */,
 				01D3A7EE28869DEA005CC88F /* NetworkManager.swift in Sources */,
 				01D3A7D628846978005CC88F /* GFTextField.swift in Sources */,
 				01D3A7E62885A5EA005CC88F /* GFContainerView.swift in Sources */,
