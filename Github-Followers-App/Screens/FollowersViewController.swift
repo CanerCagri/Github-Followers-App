@@ -15,6 +15,7 @@ class FollowersViewController: UIViewController {
     
     var userName: String!
     var followers: [Follower] = []
+    var filteredFollowers: [Follower] = []
     var page = 1
     var fetchMoreFollower = true
     
@@ -24,6 +25,7 @@ class FollowersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
+        configureSearchController()
         configureCollectionView()
         fetchFollowers(username: userName, page: page)
         configureDataSource()
@@ -37,6 +39,17 @@ class FollowersViewController: UIViewController {
     func configureViewController() {
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
+    func configureSearchController() {
+        let searchController = UISearchController()
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
+        searchController.searchBar.placeholder = "Search for a username"
+        searchController.obscuresBackgroundDuringPresentation = false
+        navigationItem.searchController = searchController
+        
     }
     
     func configureCollectionView() {
@@ -66,7 +79,7 @@ class FollowersViewController: UIViewController {
                         return
                     }
                 }
-                self?.updateData()
+                self?.updateData(followers: self!.followers)
                 
             case .failure(let error):
                 self?.presentAlert(title: "Error", message: error.rawValue, buttonTitle: "Ok")
@@ -83,7 +96,7 @@ class FollowersViewController: UIViewController {
         })
     }
     
-    func updateData() {
+    func updateData(followers: [Follower]) {
         var snapShot = NSDiffableDataSourceSnapshot<Section, Follower>()
         snapShot.appendSections([.main])
         snapShot.appendItems(followers)
@@ -104,4 +117,19 @@ extension FollowersViewController: UICollectionViewDelegate {
             self.fetchFollowers(username: userName, page: page)
         }
     }
+}
+
+extension FollowersViewController: UISearchResultsUpdating, UISearchBarDelegate {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let filter = searchController.searchBar.text, !filter.isEmpty else { return }
+        
+        filteredFollowers = followers.filter { $0.login.lowercased().contains(filter.lowercased())    }
+        updateData(followers: filteredFollowers)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        updateData(followers: followers)
+    }
+    
+    
 }
