@@ -1,5 +1,5 @@
 //
-//  ErrorMessages.swift
+//  GFError.swift
 //  Github-Followers-App
 //
 //  Created by Caner Çağrı on 19.07.2022.
