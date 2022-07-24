@@ -17,6 +17,7 @@ class GFItemInfoViewController: UIViewController {
     let padding: CGFloat = 12
     
     var user: User!
+    weak var delegate: FollowerDetailVCDelegate!
     
     init(user: User) {
         super.init(nibName: nil, bundle: nil)
@@ -30,6 +31,7 @@ class GFItemInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureBackground()
+        configureActionButton()
         layoutUI()
         configureStackView()
     }
@@ -45,6 +47,12 @@ class GFItemInfoViewController: UIViewController {
         stackView.addArrangedSubview(itemInfoOne)
         stackView.addArrangedSubview(itemInfoTwo)
     }
+    
+    private func configureActionButton() {
+        actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc func actionButtonTapped() { }
     
     private func layoutUI() {
         view.addSubview(stackView)

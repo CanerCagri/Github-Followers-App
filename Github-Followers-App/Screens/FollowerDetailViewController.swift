@@ -7,6 +7,12 @@
 
 import UIKit
 
+
+protocol FollowerDetailVCDelegate: AnyObject {
+    func didTapGithubProfile(user: User)
+    func didTapGetFollowers(user: User)
+}
+
 class FollowerDetailViewController: UIViewController {
     
     let headerView = UIView()
@@ -15,7 +21,7 @@ class FollowerDetailViewController: UIViewController {
     let dateLabel = GFBodyLabel(textAlignment: .center)
     
     var containers: [UIView] = []
-    
+    weak var delegate: FollowersViewControllerDelegate!
     var username: String!
     let padding: CGFloat = 20
     let itemHeight: CGFloat = 140
@@ -40,16 +46,25 @@ class FollowerDetailViewController: UIViewController {
                 
             case .success(let user):
                 DispatchQueue.main.async {
-                    self?.add(childVC: GFInfoHeaderViewController(user: user), containerView: self!.headerView)
-                    self?.add(childVC: GFRepoItemViewController(user: user), containerView: self!.containerViewOne)
-                    self?.add(childVC: GFFollowerItemViewController(user: user), containerView: self!.containerViewTwo)
-                    self?.dateLabel.text = "Github Since \(user.createdAt.convertToDisplayFormat())"
+                    self!.configureUI(user: user)
                 }
                 
             case .failure(let error):
                 self?.presentAlert(title: "Something went wrong!", message: error.rawValue, buttonTitle: "Ok")
             }
         }
+    }
+    
+    func configureUI(user: User) {
+        let repoItemVC = GFRepoItemViewController(user: user)
+        repoItemVC.delegate = self
+        let followerItemVC = GFFollowerItemViewController(user: user)
+        followerItemVC.delegate = self
+        
+        self.add(childVC: GFInfoHeaderViewController(user: user), containerView: self.headerView)
+        self.add(childVC: repoItemVC, containerView: self.containerViewOne)
+        self.add(childVC: followerItemVC, containerView: self.containerViewTwo)
+        self.dateLabel.text = "Github Since \(user.createdAt.convertToDisplayFormat())"
     }
     
     func layoutUI() {
@@ -84,6 +99,7 @@ class FollowerDetailViewController: UIViewController {
     }
     
     func add(childVC: UIViewController, containerView: UIView) {
+        addChild(childVC)
         containerView.addSubview(childVC.view)
         childVC.view.frame = containerView.bounds
     }
@@ -91,4 +107,25 @@ class FollowerDetailViewController: UIViewController {
     @objc func dismissVC() {
         dismiss(animated: true)
     }
+}
+
+extension FollowerDetailViewController: FollowerDetailVCDelegate {
+    func didTapGithubProfile(user: User) {
+        guard let url = URL(string: user.htmlUrl) else {
+            presentAlert(title: "Invalid URL", message: "This user url is invalid. Please try again ", buttonTitle: "Ok")
+            return
+        }
+        presentSafari(url: url)
+    }
+    
+    func didTapGetFollowers(user: User) {
+        guard user.followers != 0 else {
+            presentAlert(title: "No followers", message: "This user not have followers🥲", buttonTitle: "Ok")
+            return
+        }
+        delegate.didRequestFollowers(username: user.login)
+        dismissVC()
+    }
+    
+    
 }

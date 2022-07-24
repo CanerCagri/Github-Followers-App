@@ -7,6 +7,12 @@
 
 import UIKit
 
+
+protocol FollowersViewControllerDelegate: AnyObject {
+    func didRequestFollowers(username: String)
+}
+
+
 class FollowersViewController: UIViewController {
     
     enum Section {
@@ -22,7 +28,7 @@ class FollowersViewController: UIViewController {
     
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource <Section, Follower>!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
@@ -60,7 +66,7 @@ class FollowersViewController: UIViewController {
         collectionView.backgroundColor = .systemBackground
         collectionView.register(FollowerCell.self, forCellWithReuseIdentifier: FollowerCell.reuseID)
     }
-   
+    
     func fetchFollowers(username: String, page: Int) {
         showLoading()
         NetworkManager.shared.getFollowers(username: userName, page: page) {[weak self] result in
@@ -125,6 +131,7 @@ extension FollowersViewController: UICollectionViewDelegate {
         
         let followerInfoVC = FollowerDetailViewController()
         followerInfoVC.username = follower.login
+        followerInfoVC.delegate = self
         let navigationController = UINavigationController(rootViewController: followerInfoVC)
         present(navigationController, animated: true)
     }
@@ -142,6 +149,16 @@ extension FollowersViewController: UISearchResultsUpdating, UISearchBarDelegate 
         isSearching = false
         updateData(followers: followers)
     }
-    
-    
+}
+
+extension FollowersViewController: FollowersViewControllerDelegate {
+    func didRequestFollowers(username: String) {
+        self.userName = username
+        title = username
+        page = 1
+        followers.removeAll()
+        filteredFollowers.removeAll()
+        collectionView.setContentOffset(.zero, animated: true)
+        fetchFollowers(username: username, page: page)
+    }
 }
