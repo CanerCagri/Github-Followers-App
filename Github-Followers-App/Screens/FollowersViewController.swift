@@ -47,6 +47,9 @@ class FollowersViewController: UIViewController {
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.hidesSearchBarWhenScrolling = false
+        
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
+        navigationItem.rightBarButtonItem = addButton
     }
     
     func configureSearchController() {
@@ -110,6 +113,36 @@ class FollowersViewController: UIViewController {
         
         dataSource.apply(snapShot, animatingDifferences: true)
     }
+    
+    @objc func addButtonTapped() {
+        showLoading()
+        
+        NetworkManager.shared.getUserInfo(username: userName) { [weak self] result in
+            guard let self = self else { return }
+            self.dismissLoading()
+            
+            switch result {
+            case .success(let user):
+                let favorite = Follower(login: user.login, avatarUrl: user.avatarUrl)
+                
+                PersistenceManager.updateWith(favorite: favorite, actionType: .add) { [weak self] error in
+                    guard let self = self else { return }
+                    
+                    guard let error = error else {
+                        self.presentAlert(title: "Success.", message: "You have succesfully favorited this user", buttonTitle: "Ok")
+                        return
+                    }
+                    
+                    self.presentAlert(title: "Something Went Wrong", message: error.rawValue, buttonTitle: "Ok")
+                }
+                
+            case .failure(let error):
+                self.presentAlert(title: "Something Went Wrong", message: error.rawValue, buttonTitle: "Ok")
+            }
+        }
+        
+    }
+    
 }
 
 extension FollowersViewController: UICollectionViewDelegate {
