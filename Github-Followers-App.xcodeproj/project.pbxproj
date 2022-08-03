@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		013914222897BCC9007C212C /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013914212897BCC9007C212C /* PersistenceManager.swift */; };
 		013914242897F4F0007C212C /* FavoriteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013914232897F4F0007C212C /* FavoriteCell.swift */; };
+		0139146B289A6EB9007C212C /* GFTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0139146A289A6EB9007C212C /* GFTabBarController.swift */; };
 		018DF5EF288AC48B000271D1 /* GFItemInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018DF5EE288AC48B000271D1 /* GFItemInfoView.swift */; };
 		018DF5F1288AD057000271D1 /* GFItemInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018DF5F0288AD057000271D1 /* GFItemInfoViewController.swift */; };
 		018DF5F3288ADA79000271D1 /* GFRepoItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018DF5F2288ADA79000271D1 /* GFRepoItemViewController.swift */; };
@@ -46,6 +47,7 @@
 /* Begin PBXFileReference section */
 		013914212897BCC9007C212C /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		013914232897F4F0007C212C /* FavoriteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCell.swift; sourceTree = "<group>"; };
+		0139146A289A6EB9007C212C /* GFTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GFTabBarController.swift; sourceTree = "<group>"; };
 		018DF5EE288AC48B000271D1 /* GFItemInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GFItemInfoView.swift; sourceTree = "<group>"; };
 		018DF5F0288AD057000271D1 /* GFItemInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GFItemInfoViewController.swift; sourceTree = "<group>"; };
 		018DF5F2288ADA79000271D1 /* GFRepoItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GFRepoItemViewController.swift; sourceTree = "<group>"; };
@@ -92,6 +94,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01391469289A6E96007C212C /* TabBarControllers */ = {
+			isa = PBXGroup;
+			children = (
+				0139146A289A6EB9007C212C /* GFTabBarController.swift */,
+			);
+			path = TabBarControllers;
+			sourceTree = "<group>";
+		};
 		018DF5F6288ADC1E000271D1 /* ItemInfoVCs */ = {
 			isa = PBXGroup;
 			children = (
@@ -146,6 +156,7 @@
 		01D3A7E22885A31C005CC88F /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				01391469289A6E96007C212C /* TabBarControllers */,
 				01D3A7FF28887218005CC88F /* ViewControllers */,
 				01D3A7FD288871FC005CC88F /* Views */,
 				01D3A7FC288871F1005CC88F /* TextFields */,
@@ -371,6 +382,7 @@
 				018DF5EF288AC48B000271D1 /* GFItemInfoView.swift in Sources */,
 				01D3A7E62885A5EA005CC88F /* GFContainerView.swift in Sources */,
 				01D427D428899A8800B678E5 /* Constants.swift in Sources */,
+				0139146B289A6EB9007C212C /* GFTabBarController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

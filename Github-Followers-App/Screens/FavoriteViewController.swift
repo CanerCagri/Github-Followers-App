@@ -77,9 +77,7 @@ extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let favorite = favorites[indexPath.row]
-        let destVC = FollowersViewController()
-        destVC.userName = favorite.login
-        destVC.title = favorite.login
+        let destVC = FollowersViewController(userName: favorite.login)
         
         navigationController?.pushViewController(destVC, animated: true)
     }
@@ -93,7 +91,7 @@ extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource {
         
         PersistenceManager.updateWith(favorite: favorite, actionType: .remove) { [weak self] error in
             guard let self = self else { return }
-            guard let error = error else { return }
+            guard let _ = error else { return }
             
             self.presentAlert(title: "Something Went Wrong", message: "Please try again", buttonTitle: "Ok")
         }

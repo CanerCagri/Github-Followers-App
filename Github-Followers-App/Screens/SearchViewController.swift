@@ -12,6 +12,7 @@ class SearchViewController: UIViewController {
     let imageView = UIImageView()
     let nameTextField = GFTextField()
     let getFollowersButton = GFButton(title: "Get Followers", backgroundColor: .systemGreen)
+    var imageViewTopConstraint: NSLayoutConstraint!
     
     var isUsernameEntered: Bool {
         return !nameTextField.text!.isEmpty
@@ -29,6 +30,7 @@ class SearchViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        nameTextField.text = ""
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
@@ -38,9 +40,9 @@ class SearchViewController: UIViewController {
             return
         }
         
-        let followersVC = FollowersViewController()
-        followersVC.userName = nameTextField.text
-        followersVC.title = nameTextField.text
+        nameTextField.resignFirstResponder()
+        
+        let followersVC = FollowersViewController(userName: nameTextField.text!)
         navigationController?.pushViewController(followersVC, animated: true)
     }
     
@@ -48,10 +50,15 @@ class SearchViewController: UIViewController {
         view.addSubview(imageView)
         
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "gh-logo")!
+        imageView.image = Images.ghLogo
+        
+        //Checking iphone model and when we open keyboard if it is blocking textfield we changing top constraint and giving it space for textfield
+        let topConstarintConstant: CGFloat = DeviceTypes.isiPhoneSE || DeviceTypes.isiPhone8PlusZoomed ? 20 : 80
+        
+        imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: topConstarintConstant)
+        imageViewTopConstraint.isActive = true
         
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             imageView.heightAnchor.constraint(equalToConstant: 200),
             imageView.widthAnchor.constraint(equalToConstant: 200)
