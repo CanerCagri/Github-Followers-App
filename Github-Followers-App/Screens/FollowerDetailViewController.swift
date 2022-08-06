@@ -8,12 +8,14 @@
 import UIKit
 
 
-protocol FollowerDetailVCDelegate: AnyObject {
-    func didTapGithubProfile(user: User)
-    func didTapGetFollowers(user: User)
+protocol FollowerDetailViewControllerDelegate: AnyObject {
+    func didRequestFollowers(username: String)
 }
 
 class FollowerDetailViewController: UIViewController {
+    
+    let scrollView = UIScrollView()
+    let contentView = UIView()
     
     let headerView = UIView()
     let containerViewOne = UIView()
@@ -21,7 +23,7 @@ class FollowerDetailViewController: UIViewController {
     let dateLabel = GFBodyLabel(textAlignment: .center)
     
     var containers: [UIView] = []
-    weak var delegate: FollowersViewControllerDelegate!
+    weak var delegate: FollowerDetailViewControllerDelegate!
     var username: String!
     let padding: CGFloat = 20
     let itemHeight: CGFloat = 140
@@ -30,6 +32,7 @@ class FollowerDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
+        configureScrollView()
         layoutUI()
         fetchUser()
     }
@@ -38,6 +41,18 @@ class FollowerDetailViewController: UIViewController {
         view.backgroundColor = .systemBackground
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissVC))
         navigationItem.rightBarButtonItem = doneButton
+    }
+    
+    func configureScrollView() {
+        view.addSubviews(scrollView)
+        scrollView.addSubviews(contentView)
+        
+        scrollView.pinToEdges(view: view)
+        contentView.pinToEdges(view: scrollView)
+        
+        contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        contentView.heightAnchor.constraint(equalToConstant: 600).isActive = true
+        
     }
     
     func fetchUser() {
@@ -64,37 +79,37 @@ class FollowerDetailViewController: UIViewController {
         self.add(childVC: GFInfoHeaderViewController(user: user), containerView: self.headerView)
         self.add(childVC: repoItemVC, containerView: self.containerViewOne)
         self.add(childVC: followerItemVC, containerView: self.containerViewTwo)
-        self.dateLabel.text = "Github Since \(user.createdAt.convertToDisplayFormat())"
+        self.dateLabel.text = "Github Since \(user.createdAt.convertToMonthYearFormat())"
     }
     
     func layoutUI() {
         containers = [headerView, containerViewOne, containerViewTwo, dateLabel]
         
         for containerViews in containers {
-            view.addSubview(containerViews)
+            contentView.addSubview(containerViews)
             containerViews.translatesAutoresizingMaskIntoConstraints = false
         }
         
         NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            headerView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            headerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
             headerView.heightAnchor.constraint(equalToConstant: 180),
             
             containerViewOne.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: padding),
-            containerViewOne.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            containerViewOne.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            containerViewOne.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            containerViewOne.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
             containerViewOne.heightAnchor.constraint(equalToConstant: itemHeight),
             
             containerViewTwo.topAnchor.constraint(equalTo: containerViewOne.bottomAnchor, constant: padding),
-            containerViewTwo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            containerViewTwo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            containerViewTwo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            containerViewTwo.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
             containerViewTwo.heightAnchor.constraint(equalToConstant: itemHeight),
             
-            dateLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            dateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
             dateLabel.topAnchor.constraint(equalTo: containerViewTwo.bottomAnchor, constant: padding),
-            dateLabel.heightAnchor.constraint(equalToConstant: 18)
+            dateLabel.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -109,7 +124,7 @@ class FollowerDetailViewController: UIViewController {
     }
 }
 
-extension FollowerDetailViewController: FollowerDetailVCDelegate {
+extension FollowerDetailViewController: GFRepoItemViewControllerDelegate {
     func didTapGithubProfile(user: User) {
         guard let url = URL(string: user.htmlUrl) else {
             presentAlert(title: "Invalid URL", message: "This user url is invalid. Please try again ", buttonTitle: "Ok")
@@ -117,7 +132,9 @@ extension FollowerDetailViewController: FollowerDetailVCDelegate {
         }
         presentSafari(url: url)
     }
-    
+}
+
+extension FollowerDetailViewController: GFFollowerItemViewControllerDelegate {
     func didTapGetFollowers(user: User) {
         guard user.followers != 0 else {
             presentAlert(title: "No followers", message: "This user not have followers🥲", buttonTitle: "Ok")
@@ -125,7 +142,7 @@ extension FollowerDetailViewController: FollowerDetailVCDelegate {
         }
         delegate.didRequestFollowers(username: user.login)
         dismissVC()
+        
     }
-    
-    
 }
+

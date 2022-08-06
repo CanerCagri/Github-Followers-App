@@ -23,6 +23,7 @@ class SearchViewController: UIViewController {
 
         //Systembackground is making background while in light mode "white", dark mode "black"
         view.backgroundColor = .systemBackground
+        view.addSubviews(imageView, nameTextField, getFollowersButton)
         createImageView()
         createNameTextField()
         createGetFollowersButton()
@@ -47,8 +48,6 @@ class SearchViewController: UIViewController {
     }
     
     func createImageView() {
-        view.addSubview(imageView)
-        
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = Images.ghLogo
         
@@ -66,7 +65,6 @@ class SearchViewController: UIViewController {
     }
     
     func createNameTextField() {
-        view.addSubview(nameTextField)
         nameTextField.delegate = self
         
         NSLayoutConstraint.activate([
@@ -78,7 +76,6 @@ class SearchViewController: UIViewController {
     }
     
     func createGetFollowersButton() {
-        view.addSubview(getFollowersButton)
         getFollowersButton.addTarget(self, action: #selector(pushFollowersVC), for: .touchUpInside)
         
         NSLayoutConstraint.activate([

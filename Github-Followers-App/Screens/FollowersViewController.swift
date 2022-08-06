@@ -8,11 +8,6 @@
 import UIKit
 
 
-protocol FollowersViewControllerDelegate: AnyObject {
-    func didRequestFollowers(username: String)
-}
-
-
 class FollowersViewController: UIViewController {
     
     enum Section {
@@ -25,6 +20,7 @@ class FollowersViewController: UIViewController {
     var page = 1
     var fetchMoreFollower = true
     var isSearching = false
+    var isLoadingMoreFollowers = false
     
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource <Section, Follower>!
@@ -65,7 +61,6 @@ class FollowersViewController: UIViewController {
     func configureSearchController() {
         let searchController = UISearchController()
         searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "Search for a username"
         searchController.obscuresBackgroundDuringPresentation = false
         navigationItem.searchController = searchController
@@ -82,6 +77,7 @@ class FollowersViewController: UIViewController {
     
     func fetchFollowers(username: String, page: Int) {
         showLoading()
+        isLoadingMoreFollowers = true
         NetworkManager.shared.getFollowers(username: userName, page: page) {[weak self] result in
             self?.dismissLoading()
             switch result {
@@ -104,6 +100,7 @@ class FollowersViewController: UIViewController {
             case .failure(let error):
                 self?.presentAlert(title: "Error", message: error.rawValue, buttonTitle: "Ok")
             }
+            self?.isLoadingMoreFollowers = false
         }
     }
     
@@ -150,9 +147,7 @@ class FollowersViewController: UIViewController {
                 self.presentAlert(title: "Something Went Wrong", message: error.rawValue, buttonTitle: "Ok")
             }
         }
-        
     }
-    
 }
 
 extension FollowersViewController: UICollectionViewDelegate {
@@ -162,7 +157,7 @@ extension FollowersViewController: UICollectionViewDelegate {
         let height = scrollView.frame.size.height
         
         if offsetY > contentHeight - height {
-            guard fetchMoreFollower else { return }
+            guard fetchMoreFollower, !isLoadingMoreFollowers else { return }
             page += 1
             self.fetchFollowers(username: userName, page: page)
         }
@@ -180,21 +175,22 @@ extension FollowersViewController: UICollectionViewDelegate {
     }
 }
 
-extension FollowersViewController: UISearchResultsUpdating, UISearchBarDelegate {
+extension FollowersViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let filter = searchController.searchBar.text, !filter.isEmpty else { return }
+        guard let filter = searchController.searchBar.text, !filter.isEmpty else {
+            filteredFollowers.removeAll()
+            isSearching = false
+            updateData(followers: followers)
+            return
+        }
+        
         isSearching = true
-        filteredFollowers = followers.filter { $0.login.lowercased().contains(filter.lowercased())    }
+        filteredFollowers = followers.filter { $0.login.lowercased().contains(filter.lowercased()) }
         updateData(followers: filteredFollowers)
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        isSearching = false
-        updateData(followers: followers)
     }
 }
 
-extension FollowersViewController: FollowersViewControllerDelegate {
+extension FollowersViewController: FollowerDetailViewControllerDelegate {
     func didRequestFollowers(username: String) {
         self.userName = username
         title = username
@@ -202,6 +198,7 @@ extension FollowersViewController: FollowersViewControllerDelegate {
         followers.removeAll()
         filteredFollowers.removeAll()
         collectionView.setContentOffset(.zero, animated: true)
+        collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
         fetchFollowers(username: username, page: page)
     }
 }

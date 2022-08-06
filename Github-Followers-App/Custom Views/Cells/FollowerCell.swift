@@ -25,12 +25,16 @@ class FollowerCell: UICollectionViewCell {
     
     func set(follower: Follower) {
         userNameLabel.text = follower.login
-        followerImageView.downloadImage(urlString: follower.avatarUrl)
+        NetworkManager.shared.downloadImage(urlString: follower.avatarUrl) { [weak self] image in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.followerImageView.image = image
+            }
+        }
     }
     
     private func configure() {
-        addSubview(followerImageView)
-        addSubview(userNameLabel)
+        addSubviews(followerImageView, userNameLabel)
         
         NSLayoutConstraint.activate([
             followerImageView.topAnchor.constraint(equalTo: topAnchor, constant: padding),

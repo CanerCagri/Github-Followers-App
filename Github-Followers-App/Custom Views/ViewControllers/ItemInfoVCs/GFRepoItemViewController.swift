@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol GFRepoItemViewControllerDelegate: AnyObject {
+    func didTapGithubProfile(user: User)
+}
+
 class GFRepoItemViewController: GFItemInfoViewController {
+    
+    weak var delegate: GFRepoItemViewControllerDelegate!
     
     override func viewDidLoad() {
         super.viewDidLoad()
