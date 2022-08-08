@@ -29,7 +29,7 @@ class GFInfoHeaderViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addSubviews()
+        view.addSubviews(avatarImageView, usernameLabel, nameLabel, locationImageView, locationLabel, bioLabel)
         layoutUI()
         configureUI()
     }
@@ -53,10 +53,6 @@ class GFInfoHeaderViewController: UIViewController {
                 self.avatarImageView.image = image
             }
         }
-    }
-    
-    func addSubviews() {
-        view.addSubviews(avatarImageView, usernameLabel, nameLabel, locationImageView, locationLabel, bioLabel)
     }
     
     func layoutUI() {

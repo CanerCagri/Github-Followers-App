@@ -13,7 +13,7 @@ protocol ItemInfoViewControllerDelegate: AnyObject {
 }
 
 class GFItemInfoViewController: UIViewController {
-    
+
     let stackView = UIStackView()
     let itemInfoOne = GFItemInfoView()
     let itemInfoTwo = GFItemInfoView()

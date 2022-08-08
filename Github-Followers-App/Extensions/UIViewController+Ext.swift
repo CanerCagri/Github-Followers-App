@@ -21,6 +21,15 @@ extension UIViewController {
         }
     }
     
+    func presentDefaultError() {
+        let alertVC = GFAlertViewController(alertTitle: "Something Went Wrong",
+                                            message: "Please try again",
+                                            buttonTitle: "Ok")
+        alertVC.modalTransitionStyle = .crossDissolve
+        alertVC.modalPresentationStyle = .overFullScreen
+        present(alertVC, animated: true)
+    }
+    
     func presentSafari(url: URL) {
         let safariVC = SFSafariViewController(url: url)
         safariVC.preferredControlTintColor = .systemGreen
@@ -45,6 +54,7 @@ extension UIViewController {
             activityIndicator.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
         ])
+        
         activityIndicator.startAnimating()
     }
     

@@ -23,7 +23,7 @@ class GFRepoItemViewController: GFItemInfoViewController {
     private func configureItems() {
         itemInfoOne.set(itemInfoType: .repos, count: user.publicRepos)
         itemInfoTwo.set(itemInfoType: .gists, count: user.publicGists)
-        actionButton.set(backgroundColor: .systemPurple, title: "Github Profile")
+        actionButton.set(color: .systemPurple, title: "Github Profile", systemImageName: "person")
     }
     
     override func actionButtonTapped() {

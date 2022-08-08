@@ -28,7 +28,6 @@ class FollowerDetailViewController: UIViewController {
     let padding: CGFloat = 20
     let itemHeight: CGFloat = 140
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
@@ -52,22 +51,36 @@ class FollowerDetailViewController: UIViewController {
         
         contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         contentView.heightAnchor.constraint(equalToConstant: 600).isActive = true
-        
     }
     
     func fetchUser() {
-        NetworkManager.shared.getUserInfo(username: username) { [weak self] result in
-            switch result {
-                
-            case .success(let user):
-                DispatchQueue.main.async {
-                    self!.configureUI(user: user)
+        
+        Task {
+            do {
+                let user = try await NetworkManager.shared.getUserInfo(username: username)
+                configureUI(user: user)
+            } catch {
+                if let gfError = error as? GFError {
+                    presentAlert(title: "Something went wrong", message: gfError.rawValue, buttonTitle: "Ok")
+                } else {
+                    presentDefaultError()
                 }
-                
-            case .failure(let error):
-                self?.presentAlert(title: "Something went wrong!", message: error.rawValue, buttonTitle: "Ok")
+                dismissLoading()
             }
         }
+        // With completion handler
+//        NetworkManager.shared.getUserInfo(username: username) { [weak self] result in
+//            switch result {
+//
+//            case .success(let user):
+//                DispatchQueue.main.async {
+//                    self!.configureUI(user: user)
+//                }
+//
+//            case .failure(let error):
+//                self?.presentAlert(title: "Something went wrong!", message: error.rawValue, buttonTitle: "Ok")
+//            }
+//        }
     }
     
     func configureUI(user: User) {
@@ -142,7 +155,6 @@ extension FollowerDetailViewController: GFFollowerItemViewControllerDelegate {
         }
         delegate.didRequestFollowers(username: user.login)
         dismissVC()
-        
     }
 }
 

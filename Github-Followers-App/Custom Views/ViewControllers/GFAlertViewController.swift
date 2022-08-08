@@ -12,11 +12,12 @@ class GFAlertViewController: UIViewController {
     let containerView = GFContainerView()
     let titleLabel = GFTitleLabel(textAlignment: .center, fontSize: 20)
     let bodyLabel = GFBodyLabel(textAlignment: .center)
-    let actionButton = GFButton(title: "Ok", backgroundColor: .systemPink)
+    let actionButton = GFButton(title: "Ok", color: .systemPink, systemImageName: "checkmark.circle")
     
     var alertTitle: String?
     var message: String?
     var buttonTitle: String?
+    
     var padding: CGFloat = 20
     
     init(alertTitle: String, message: String, buttonTitle: String) {
@@ -32,8 +33,8 @@ class GFAlertViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = UIColor.black.withAlphaComponent(0.75)
+        
         configureContainerView()
         configureTitleLabel()
         configureActionButton()
@@ -42,8 +43,6 @@ class GFAlertViewController: UIViewController {
     
     func configureContainerView() {
         view.addSubview(containerView)
-        
-        
         
         NSLayoutConstraint.activate([
             containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),

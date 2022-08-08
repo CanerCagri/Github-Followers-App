@@ -11,8 +11,7 @@ class SearchViewController: UIViewController {
     
     let imageView = UIImageView()
     let nameTextField = GFTextField()
-    let getFollowersButton = GFButton(title: "Get Followers", backgroundColor: .systemGreen)
-    var imageViewTopConstraint: NSLayoutConstraint!
+    let getFollowersButton = GFButton(title: "Get Followers", color: .systemGreen, systemImageName: "person.3")
     
     var isUsernameEntered: Bool {
         return !nameTextField.text!.isEmpty
@@ -54,10 +53,8 @@ class SearchViewController: UIViewController {
         //Checking iphone model and when we open keyboard if it is blocking textfield we changing top constraint and giving it space for textfield
         let topConstarintConstant: CGFloat = DeviceTypes.isiPhoneSE || DeviceTypes.isiPhone8PlusZoomed ? 20 : 80
         
-        imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: topConstarintConstant)
-        imageViewTopConstraint.isActive = true
-        
         NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: topConstarintConstant),
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             imageView.heightAnchor.constraint(equalToConstant: 200),
             imageView.widthAnchor.constraint(equalToConstant: 200)

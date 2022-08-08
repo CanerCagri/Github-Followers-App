@@ -12,6 +12,7 @@ class FavoriteCell: UITableViewCell {
     static let reuseID = "FavoriteCell"
     let favoriteImageView = GFFollowerImageView(frame: .zero)
     let userNameLabel = GFTitleLabel(textAlignment: .center, fontSize: 16)
+    
     let padding: CGFloat = 12
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -35,7 +36,6 @@ class FavoriteCell: UITableViewCell {
     
     private func configure() {
         addSubviews(favoriteImageView, userNameLabel)
-        
         accessoryType = .disclosureIndicator
         
         NSLayoutConstraint.activate([

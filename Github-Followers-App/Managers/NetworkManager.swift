@@ -14,83 +14,134 @@ struct NetworkManager {
     
     private init() {}
     
-    func getFollowers(username: String, page: Int, completion: @escaping (Result<[Follower], GFError>) -> Void) {
+    // With completion handler
+//    func getFollowers(username: String, page: Int, completion: @escaping (Result<[Follower], GFError>) -> Void) {
+//        let endPoint = baseUrl + "\(username)/followers?per_page=100&page=\(page)"
+//
+//        guard let url = URL(string: endPoint) else {
+//            completion(.failure(.invalidUsername))
+//            return
+//        }
+//
+//        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+//            if let _ = error {
+//                completion(.failure(.unableToComplete))
+//                return
+//            }
+//
+//            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+//                completion(.failure(.unableToComplete))
+//                return
+//            }
+//
+//            guard let data = data else {
+//                completion(.failure(.invalidData))
+//                return
+//            }
+//
+//            do {
+//                let decoder = JSONDecoder()
+//                decoder.keyDecodingStrategy = .convertFromSnakeCase
+//                let followers = try decoder.decode([Follower].self, from: data)
+//                completion(.success(followers))
+//            } catch {
+//                completion(.failure(.invalidData))
+//            }
+//
+//        }
+//
+//        task.resume()
+//    }
+    
+    // async and await added instead of completion handler.
+    func getFollowers(username: String, page: Int) async throws -> [Follower] {
         let endPoint = baseUrl + "\(username)/followers?per_page=100&page=\(page)"
         
         guard let url = URL(string: endPoint) else {
-            completion(.failure(.invalidUsername))
-            return
+            throw GFError.invalidUsername
         }
         
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            if let _ = error {
-                completion(.failure(.unableToComplete))
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completion(.failure(.unableToComplete))
-                return
-            }
-
-            guard let data = data else {
-                completion(.failure(.invalidData))
-                return
-            }
-            
-            do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let followers = try decoder.decode([Follower].self, from: data)
-                completion(.success(followers))
-            } catch {
-                completion(.failure(.invalidData))
-            }
-
+        let (data,response) = try await URLSession.shared.data(from: url)
+        
+        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            throw GFError.invalidResponse
         }
-        task.resume()
+        
+        do {
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            return try decoder.decode([Follower].self, from: data)
+            
+        } catch {
+            throw GFError.invalidData
+        }
+        
     }
+
+    // With completion handler
+//    func getUserInfo(username: String, completion: @escaping (Result<User, GFError>) -> Void) {
+//        let endPoint = baseUrl + "\(username)"
+//
+//        guard let url = URL(string: endPoint) else {
+//            completion(.failure(.invalidUsername))
+//            return
+//        }
+//
+//        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+//            if let _ = error {
+//                completion(.failure(.unableToComplete))
+//                return
+//            }
+//
+//            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+//                completion(.failure(.unableToComplete))
+//                return
+//            }
+//
+//            guard let data = data else {
+//                completion(.failure(.invalidData))
+//                return
+//            }
+//
+//            do {
+//                let decoder = JSONDecoder()
+//                decoder.keyDecodingStrategy = .convertFromSnakeCase
+//                decoder.dateDecodingStrategy = .iso8601
+//                let user = try decoder.decode(User.self, from: data)
+//                completion(.success(user))
+//            } catch {
+//                completion(.failure(.invalidData))
+//            }
+//        }
+//
+//        task.resume()
+//    }
     
-    func getUserInfo(username: String, completion: @escaping (Result<User, GFError>) -> Void) {
+    func getUserInfo(username: String) async throws -> User {
         let endPoint = baseUrl + "\(username)"
         
         guard let url = URL(string: endPoint) else {
-            completion(.failure(.invalidUsername))
-            return
+            throw GFError.invalidUsername
         }
         
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            if let _ = error {
-                completion(.failure(.unableToComplete))
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completion(.failure(.unableToComplete))
-                return
-            }
-
-            guard let data = data else {
-                completion(.failure(.invalidData))
-                return
-            }
-            
-            do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                decoder.dateDecodingStrategy = .iso8601
-                let user = try decoder.decode(User.self, from: data)
-                completion(.success(user))
-            } catch {
-                completion(.failure(.invalidData))
-            }
-
+        let (data,response) = try await URLSession.shared.data(from: url)
+        
+        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            throw GFError.invalidResponse
         }
-        task.resume()
+        
+        do {
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            decoder.dateDecodingStrategy = .iso8601
+            return try decoder.decode(User.self, from: data)
+        } catch {
+            throw GFError.invalidData
+        }
     }
+
     
     func downloadImage(urlString: String, completion: @escaping (UIImage?) -> Void) {
-        
         let cacheKey = NSString(string: urlString)
         
         if let image = cache.object(forKey: cacheKey) {
@@ -111,11 +162,11 @@ struct NetworkManager {
                   completion(nil)
                   return
                }
-            
             cache.setObject(image, forKey: cacheKey)
             
             completion(image)
         }
+        
         task.resume()
     }
 }

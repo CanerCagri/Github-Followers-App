@@ -66,6 +66,7 @@ class GFItemInfoView: UIView {
             symbolImageView.image = UIImage(systemName: SFSymbols.following)
             titleLabel.text = "Following"
         }
+        
         countLabel.text = String(count)
     }
 }
