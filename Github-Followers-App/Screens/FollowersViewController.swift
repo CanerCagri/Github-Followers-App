@@ -16,6 +16,7 @@ class FollowersViewController: UIViewController {
     
     var followers: [Follower] = []
     var filteredFollowers: [Follower] = []
+    let searchController = UISearchController()
     
     var page = 1
     var userName: String!
@@ -60,7 +61,6 @@ class FollowersViewController: UIViewController {
     }
     
     func configureSearchController() {
-        let searchController = UISearchController()
         searchController.searchResultsUpdater = self
         searchController.searchBar.placeholder = "Search for a username"
         searchController.obscuresBackgroundDuringPresentation = false
@@ -93,6 +93,8 @@ class FollowersViewController: UIViewController {
                 }
                 dismissLoading()
             }
+            isLoadingMoreFollowers = false
+            
             
             // Networking short way with try? await - async throws
             //            guard let follower = try? await NetworkManager.shared.getFollowers(username: userName, page: page) else {
@@ -209,60 +211,61 @@ class FollowersViewController: UIViewController {
         //                self.presentAlert(title: "Something Went Wrong", message: error.rawValue, buttonTitle: "Ok")
         //            }
         //        }
-            }
+    }
+}
+
+extension FollowersViewController: UICollectionViewDelegate {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let height = scrollView.frame.size.height
+        
+        if offsetY > contentHeight - height {
+            guard fetchMoreFollower, !isLoadingMoreFollowers, searchController.searchBar.text == "" else { return }
+            page += 1
+            self.fetchFollowers(username: userName, page: page)
+        }
     }
     
-    extension FollowersViewController: UICollectionViewDelegate {
-        func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-            let offsetY = scrollView.contentOffset.y
-            let contentHeight = scrollView.contentSize.height
-            let height = scrollView.frame.size.height
-            
-            if offsetY > contentHeight - height {
-                guard fetchMoreFollower, !isLoadingMoreFollowers else { return }
-                page += 1
-                self.fetchFollowers(username: userName, page: page)
-            }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let activeArray = isSearching ? filteredFollowers : followers
+        let follower = activeArray[indexPath.item]
+        
+        let followerInfoVC = FollowerDetailViewController()
+        followerInfoVC.username = follower.login
+        followerInfoVC.delegate = self
+        let navigationController = UINavigationController(rootViewController: followerInfoVC)
+        present(navigationController, animated: true)
+    }
+}
+
+extension FollowersViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let filter = searchController.searchBar.text, !filter.isEmpty else {
+            filteredFollowers.removeAll()
+            isSearching = false
+            updateData(followers: followers)
+            return
         }
         
-        func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-            let activeArray = isSearching ? filteredFollowers : followers
-            let follower = activeArray[indexPath.item]
-            
-            let followerInfoVC = FollowerDetailViewController()
-            followerInfoVC.username = follower.login
-            followerInfoVC.delegate = self
-            let navigationController = UINavigationController(rootViewController: followerInfoVC)
-            present(navigationController, animated: true)
-        }
+        isSearching = true
+        filteredFollowers = followers.filter { $0.login.lowercased().contains(filter.lowercased()) }
+        updateData(followers: filteredFollowers)
     }
-    
-    extension FollowersViewController: UISearchResultsUpdating {
-        func updateSearchResults(for searchController: UISearchController) {
-            guard let filter = searchController.searchBar.text, !filter.isEmpty else {
-                filteredFollowers.removeAll()
-                isSearching = false
-                updateData(followers: followers)
-                return
-            }
-            
-            isSearching = true
-            filteredFollowers = followers.filter { $0.login.lowercased().contains(filter.lowercased()) }
-            updateData(followers: filteredFollowers)
-        }
+}
+
+extension FollowersViewController: FollowerDetailViewControllerDelegate {
+    func didRequestFollowers(username: String) {
+        self.userName = username
+        title = username
+        page = 1
+        followers.removeAll()
+        filteredFollowers.removeAll()
+        collectionView.setContentOffset(.zero, animated: true)
+        collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+        
+        fetchFollowers(username: username, page: page)
     }
-    
-    extension FollowersViewController: FollowerDetailViewControllerDelegate {
-        func didRequestFollowers(username: String) {
-            self.userName = username
-            title = username
-            page = 1
-            followers.removeAll()
-            filteredFollowers.removeAll()
-            collectionView.setContentOffset(.zero, animated: true)
-            collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
-            
-            fetchFollowers(username: username, page: page)
-        }
-    }
+}
 
