@@ -44,6 +44,7 @@ class FollowersViewController: UIViewController {
         configureCollectionView()
         fetchFollowers(username: userName, page: page)
         configureDataSource()
+        pullToRefresh()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,6 +74,18 @@ class FollowersViewController: UIViewController {
         collectionView.delegate = self
         collectionView.backgroundColor = .systemBackground
         collectionView.register(FollowerCell.self, forCellWithReuseIdentifier: FollowerCell.reuseID)
+    }
+    
+    func pullToRefresh() {
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+    }
+    
+    @objc func didPullToRefresh() {
+        page = 1
+        followers.removeAll()
+        fetchFollowers(username: userName, page: page)
+        collectionView.refreshControl?.endRefreshing()
     }
     
     func fetchFollowers(username: String, page: Int) {
