@@ -93,7 +93,7 @@ class FollowersViewController: UIViewController {
         isLoadingMoreFollowers = true
         
         Task {
-            // Networking good long way with try await - async throws
+            // Networking = long way with try await - async throws
             do {
                 let follower = try await NetworkManager.shared.getFollowers(username: userName, page: page)
                 updateUI(followers: follower)
@@ -109,7 +109,7 @@ class FollowersViewController: UIViewController {
             isLoadingMoreFollowers = false
             
             
-            // Networking short way with try? await - async throws
+            // Networking = short way with try? await - async throws
             //            guard let follower = try? await NetworkManager.shared.getFollowers(username: userName, page: page) else {
             //                presentDefaultError()
             //                dismissLoading()
