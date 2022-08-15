@@ -16,10 +16,10 @@ class SearchViewController: UIViewController {
     var isUsernameEntered: Bool {
         return !nameTextField.text!.isEmpty
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         //Systembackground is making background while in light mode "white", dark mode "black"
         view.backgroundColor = .systemBackground
         view.addSubviews(imageView, nameTextField, getFollowersButton)
@@ -42,8 +42,18 @@ class SearchViewController: UIViewController {
         
         nameTextField.resignFirstResponder()
         
-        let followersVC = FollowersViewController(userName: nameTextField.text!)
-        navigationController?.pushViewController(followersVC, animated: true)
+        let textField = nameTextField.text
+        
+        if textField!.contains("https://github.com/") == true {
+            
+            let result = textField?.components(separatedBy: "github.com/")
+            let followersVC = FollowersViewController(userName: result![1])
+            navigationController?.pushViewController(followersVC, animated: true)
+        } else {
+            
+            let followersVC = FollowersViewController(userName: nameTextField.text!)
+            navigationController?.pushViewController(followersVC, animated: true)
+        }
     }
     
     func createImageView() {
