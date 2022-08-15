@@ -11,7 +11,7 @@ class SearchViewController: UIViewController {
     
     let imageView = UIImageView()
     let nameTextField = GFTextField()
-    let getFollowersButton = GFButton(title: "Get Followers", color: .systemGreen, systemImageName: "person.3")
+    let getFollowersButton = GFButton(title: "Get Followers", color: .systemBlue, systemImageName: "person.3")
     
     var isUsernameEntered: Bool {
         return !nameTextField.text!.isEmpty

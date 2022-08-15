@@ -37,6 +37,7 @@ class GFTextField: UITextField {
         autocorrectionType = .no
         returnKeyType = .go
         clearButtonMode = .whileEditing
-        placeholder = "Enter a username or user url"
+//        placeholder = "Enter a username or user url"
+        attributedPlaceholder = NSAttributedString(string:"Enter a username or user url", attributes:[NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font :UIFont(name: "Times New Roman", size: 20)!])
     }
 }
